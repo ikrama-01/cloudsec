@@ -25,7 +25,17 @@ then
 else
     echo "Docker Compose is already installed."
 fi
+cat > $HOME/prometheus/prometheus.yml <<EOF
+global:
+  scrape_interval : 15s
 
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+EOF
+
+echo "✅ prometheus.yml created at /home/prometheus_grafana"
 # Check if Prometheus container is already running, run if not
 if ! docker ps --filter "name=prometheus" | grep "prometheus" > /dev/null; then
     echo "Starting Prometheus container..."
